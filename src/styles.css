@@ -1,0 +1,8 @@
+@layer theme, base, components, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@custom-variant dark (&:is(.dark-mode *));
+
+#torn-stock-pocket {
+  @tailwind utilities;
+  font-family: 'Inter', sans-serif;
+}

@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "types": ["vite/client", "node", "tampermonkey"],
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "outDir": "dist",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    },
+    "lib": ["ES2022", "dom", "dom.iterable"],
+    "jsx": "react"
+  },
+  "include": ["src"]
+}

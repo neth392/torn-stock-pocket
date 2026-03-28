@@ -1,0 +1,14 @@
+// ==UserScript==
+// @name           <name>
+// @version        <version>
+// @description    <description>
+// @author         <author>
+// @namespace      <homepage>
+// @homepage       <homepage>
+// @updateURL      https://github.com/neth392/torn-stock-pocket/releases/latest/download/script.user.js
+// @downloadURL    https://github.com/neth392/torn-stock-pocket/releases/latest/download/script.user.js
+// @match          https://www.torn.com/page.php?sid=stocks*
+// @run-at         document-body
+// @grant          GM.getValue
+// @grant          GM.setValue
+// ==/UserScript==

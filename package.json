@@ -1,0 +1,38 @@
+{
+  "name": "torn-stock-pocket",
+  "description": "A torn.com script to easily & quickly deposit/withdraw funds via the stock market",
+  "version": "1.0.0",
+  "author": "neth [3564828]",
+  "main": "dist/script.user.js",
+  "homepage": "https://github.com/neth392/torn-stock-pocket",
+  "type": "module",
+  "scripts": {
+    "build": "vite build"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.1.18",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@types/tampermonkey": "^5.0.5",
+    "prettier": "3.8.1",
+    "prettier-plugin-classnames": "^0.9.0",
+    "prettier-plugin-merge": "^0.10.1",
+    "prettier-plugin-tailwindcss": "^0.7.2",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "tailwindcss": "^4.1.18",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3",
+    "vite": "^7.3.1",
+    "vite-plugin-banner": "^0.8.1",
+    "vite-plugin-checker": "^0.12.0",
+    "vite-plugin-css-injected-by-js": "^3.5.2"
+  },
+  "dependencies": {
+    "@cneth97/neth-tornlib": "^1.1.1",
+    "immer": "^11.1.4",
+    "use-sync-external-store": "^1.6.0",
+    "zundo": "^2.3.0",
+    "zustand": "^5.0.12"
+  }
+}

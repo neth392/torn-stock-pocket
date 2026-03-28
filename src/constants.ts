@@ -1,0 +1,11 @@
+export const REACT_ROOT_ID = 'torn-stock-pocket'
+export const STOCK_MARKET_SELECTOR = 'div[class^="stockMarket"]'
+export const STOCK_DROPDOWN_ID = 'panel-ownedTab'
+export const BUY_BUTTON_SELECTOR = '#panel-ownedTab button[class*="buy_"]'
+export const SELL_BUTTON_SELECTOR = '#panel-ownedTab button[class*="sell_"]'
+export const STOCK_LIST_SELECTOR = '#stockmarketroot > div[class^="stockMarket"] ul'
+export const STOCK_NAME_SELECTOR = 'li[class^="stockName"]'
+export const STOCK_ACRONYM_SELECTOR = '[data-acronym]'
+export const STOCK_ACRONYM_ATTRIBUTE = 'data-acronym'
+export const STOCK_AMOUNT_OWNED_SELECTOR = "p[class^='count_']"
+export const STOCK_ICON_SVG_URL = 'https://www.torn.com/images/v2/stock-market/dark-mode/logos/'
