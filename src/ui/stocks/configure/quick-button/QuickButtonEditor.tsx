@@ -49,11 +49,11 @@ export default function QuickButtonEditor() {
           <QuickButtonLabelEditor />
         </HorizontalDiv>
         <HorizontalDiv className={'flex-wrap'}>
-          <QuickButtonToggle fieldKey={'showAcronym'} label={'Show Acronym'} description={'Shows the stock acronym'} />
-          <QuickButtonToggle fieldKey={'showIcon'} label={'Show Icon'} description={'Shows the stock icon image'} />
+          <QuickButtonToggle fieldKey={'showAcronym'} label={'Acronym'} description={'Shows the stock acronym'} />
+          <QuickButtonToggle fieldKey={'showIcon'} label={'Icon'} description={'Shows the stock icon image'} />
           <QuickButtonToggle
             fieldKey={'showShares'}
-            label={'Show Shares'}
+            label={'Share #'}
             description={'Shows the number of shares to be sold/bought'}
           />
         </HorizontalDiv>
