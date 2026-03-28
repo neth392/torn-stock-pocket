@@ -61,6 +61,16 @@ export default defineConfig({
         return code.replace(/\/\*\*[\s\S]*?\*\//g, '').replace(/\/\*[^!][\s\S]*?\*\//g, '')
       },
     },
+    {
+      name: 'normalize-line-endings',
+      writeBundle(options, bundle) {
+        for (const fileName of Object.keys(bundle)) {
+          const filePath = resolve(options.dir!, fileName)
+          const content = fs.readFileSync(filePath, 'utf-8')
+          fs.writeFileSync(filePath, content.replace(/\r\n/g, '\n'), 'utf-8')
+        }
+      },
+    },
   ],
   build: {
     cssCodeSplit: false,
