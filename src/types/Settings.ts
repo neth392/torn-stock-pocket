@@ -57,6 +57,7 @@ export type QuickButton = {
   showAcronym: boolean
   showShares: boolean
   showIcon: boolean
+  abbreviateValue: boolean
 } & (
   | {
       action: 'buy'
@@ -74,11 +75,18 @@ export const DefaultQuickButton = {
   valueType: 'number',
   value: 0,
   label: '',
-  autoLabel: generateAutoLabel({ action: 'buy', mode: 'amount', valueType: 'number', value: 0 }),
+  autoLabel: generateAutoLabel({
+    action: 'buy',
+    mode: 'amount',
+    valueType: 'number',
+    value: 0,
+    abbreviateValue: false,
+  }),
   color: null,
   showAcronym: true,
   showShares: false,
   showIcon: false,
+  abbreviateValue: false,
 } as const satisfies QuickButton
 
 export type EditedQuickButton = QuickButton & { id: string; stockId: number }

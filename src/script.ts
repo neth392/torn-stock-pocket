@@ -10,7 +10,6 @@ import { useUserMoneyStore } from '@/ui/stores/useUserMoneyStore'
 import StockListObserver from '@/StockListObserver'
 import { useStockPriceStore } from '@/ui/stores/useStockPriceStore'
 import { useStockAmountOwnedStore } from '@/ui/stores/useStockAmountOwnedStore'
-import { getTornReduxStore } from '@/torn-store'
 import { initStockTrader } from '@/stock-trader'
 
 async function main() {

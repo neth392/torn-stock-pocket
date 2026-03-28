@@ -56,6 +56,11 @@ export default function QuickButtonEditor() {
             label={'Share #'}
             description={'Shows the number of shares to be sold/bought'}
           />
+          <QuickButtonToggle
+            fieldKey={'abbreviateValue'}
+            label={'Abbreviate'}
+            description={'Displays $1,500,000 as $1.5m for example'}
+          />
         </HorizontalDiv>
         <HorizontalDiv>
           <SaveQuickButton />
