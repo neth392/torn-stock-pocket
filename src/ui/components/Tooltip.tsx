@@ -11,8 +11,6 @@ type Props = {
 export default function Tooltip({ text, children, position = 'top', className = '', enabled = true }: Props) {
   const [visible, setVisible] = useState(false)
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const testWorkflow = 'test' //TODO remove
-  console.log(testWorkflow)
 
   const show = () => {
     if (!enabled) return
