@@ -1,3 +1,8 @@
+name: Auto Tag from package.json
+
+permissions:
+  contents: write
+
 on:
   push:
     branches:
@@ -18,23 +23,33 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Read version and determine tag
+      - name: Read version from package.json
         run: |
           VERSION=$(node -p "require('./package.json').version")
-          if [[ "${{ github.ref_name }}" == "beta" ]]; then
-            TAG_NAME="v${VERSION}-beta.$(git rev-parse --short HEAD)"
-          else
-            TAG_NAME="v${VERSION}"
-          fi
-          echo "TAG_NAME=$TAG_NAME" >> $GITHUB_ENV
+          echo "PACKAGE_VERSION=$VERSION" >> $GITHUB_ENV
 
-      - name: Create tag if not exists
+      - name: Determine tag
         run: |
-          if git rev-parse "$TAG_NAME" >/dev/null 2>&1; then
-            echo "Tag $TAG_NAME already exists. Skipping."
+          if [[ "${{ github.ref_name }}" == "beta" ]]; then
+            echo "TAG_NAME=beta" >> $GITHUB_ENV
+            echo "IS_BETA=true" >> $GITHUB_ENV
           else
-            git config user.name "github-actions[bot]"
-            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git tag $TAG_NAME
-            git push origin $TAG_NAME
+            echo "TAG_NAME=v$PACKAGE_VERSION" >> $GITHUB_ENV
+            echo "IS_BETA=false" >> $GITHUB_ENV
+          fi
+
+      - name: Create or update tag
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if [[ "${{ env.IS_BETA }}" == "true" ]]; then
+            git tag -f beta
+            git push origin refs/tags/beta --force
+          else
+            if git rev-parse "${{ env.TAG_NAME }}" >/dev/null 2>&1; then
+              echo "Tag ${{ env.TAG_NAME }} already exists. Skipping."
+            else
+              git tag ${{ env.TAG_NAME }}
+              git push origin ${{ env.TAG_NAME }}
+            fi
           fi
