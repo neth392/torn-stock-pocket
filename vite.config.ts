@@ -20,8 +20,8 @@ const hasTailwind = pkg.devDependencies?.['@tailwindcss/vite'] || pkg.dependenci
 
 // Replaced in the script's header to keep package.json as the source of truth.
 const metaTags = {
-  '<name>': pkg.name,
-  '<version>': pkg.version,
+  '<n>': pkg.name,
+  '<version>': process.env.OVERRIDE_VERSION?.replace(/^v/, '') || pkg.version,
   '<description>': pkg.description,
   '<author>': pkg.author,
   '<homepage>': pkg.homepage,
