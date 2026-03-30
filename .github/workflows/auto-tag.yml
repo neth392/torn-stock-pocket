@@ -42,14 +42,14 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          if [[ "$IS_BETA" == "true" ]]; then
-            git tag -f $TAG_NAME
-            git push origin $TAG_NAME --force
+          if [[ "${{ env.IS_BETA }}" == "true" ]]; then
+            git tag -f beta
+            git push origin refs/tags/beta --force
           else
-            if git rev-parse "$TAG_NAME" >/dev/null 2>&1; then
-              echo "Tag $TAG_NAME already exists. Skipping."
+            if git rev-parse "${{ env.TAG_NAME }}" >/dev/null 2>&1; then
+              echo "Tag ${{ env.TAG_NAME }} already exists. Skipping."
             else
-              git tag $TAG_NAME
-              git push origin $TAG_NAME
+              git tag ${{ env.TAG_NAME }}
+              git push origin ${{ env.TAG_NAME }}
             fi
           fi
