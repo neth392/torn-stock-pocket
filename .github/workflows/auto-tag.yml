@@ -1,13 +1,8 @@
-# .github/workflows/auto-tag.yml
-name: Auto Tag from package.json
-
-permissions:
-  contents: write
-
 on:
   push:
     branches:
       - master
+      - beta
 
 jobs:
   tag:
@@ -16,19 +11,22 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Required to push tags
+          fetch-depth: 0
 
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      - name: Read version from package.json
-        id: pkg
+      - name: Read version and determine tag
         run: |
           VERSION=$(node -p "require('./package.json').version")
-          echo "PACKAGE_VERSION=$VERSION" >> $GITHUB_ENV
-          echo "TAG_NAME=v$VERSION" >> $GITHUB_ENV
+          if [[ "${{ github.ref_name }}" == "beta" ]]; then
+            TAG_NAME="v${VERSION}-beta.$(git rev-parse --short HEAD)"
+          else
+            TAG_NAME="v${VERSION}"
+          fi
+          echo "TAG_NAME=$TAG_NAME" >> $GITHUB_ENV
 
       - name: Create tag if not exists
         run: |

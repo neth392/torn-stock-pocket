@@ -46,11 +46,20 @@ jobs:
           echo "TAG_NAME=$TAG" >> $GITHUB_ENV
           echo "Latest tag: $TAG"
 
+      - name: Determine if prerelease
+        run: |
+          if [[ "${{ env.TAG_NAME }}" == *"-beta"* ]]; then
+            echo "IS_PRERELEASE=true" >> $GITHUB_ENV
+          else
+            echo "IS_PRERELEASE=false" >> $GITHUB_ENV
+          fi
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          name: ${{ env.PACKAGE_NAME }}  ${{ env.TAG_NAME }}
+          name: ${{ env.PACKAGE_NAME }} ${{ env.TAG_NAME }}
           tag_name: ${{ env.TAG_NAME }}
+          prerelease: ${{ env.IS_PRERELEASE == 'true' }}
           files: dist/script.user.js
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

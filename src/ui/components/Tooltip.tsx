@@ -43,8 +43,11 @@ export default function Tooltip({ text, children, position = 'top', className = 
       className={`${className} relative inline-flex`}
       onMouseEnter={show}
       onMouseLeave={hide}
-      onTouchStart={show}
-      onTouchEnd={hide}
+      onContextMenu={(e) => {
+        if (!enabled) return
+        e.preventDefault()
+        setVisible((v) => !v)
+      }}
     >
       {children}
       {visible && enabled && (
