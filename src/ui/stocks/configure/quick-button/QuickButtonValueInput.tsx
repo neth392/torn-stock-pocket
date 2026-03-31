@@ -32,9 +32,9 @@ export default function QuickButtonValueInput() {
       </button>
       <input
         type="text"
-        value={isAll ? '' : value!}
+        value={isAll ? '' : value === 0 ? '' : value!}
         onChange={handleInputChange}
-        placeholder={isAll ? 'Amount (Currently All)' : 'Amount'}
+        placeholder={isAll ? '$ Amount (Currently All)' : '$ Amount'}
         className="w-full rounded-md border border-neutral-300 bg-neutral-200 p-1.5 text-sm text-neutral-700
           outline-none dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-300"
       />

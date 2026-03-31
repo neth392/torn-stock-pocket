@@ -9,7 +9,6 @@ export default function QuickButtonLabelEditor() {
 
   const [localLabel, setLocalLabel] = useState(label)
 
-  // Sync from store → local when the store value changes externally
   useEffect(() => {
     setLocalLabel(label)
   }, [label])
@@ -29,7 +28,7 @@ export default function QuickButtonLabelEditor() {
       onKeyDown={(e) => {
         if (e.key === 'Enter') flush()
       }}
-      placeholder={defaultLabel}
+      placeholder={`Label | ${defaultLabel}`}
       className="w-full rounded-md border border-neutral-300 bg-neutral-200 p-1.5 text-sm text-neutral-700 outline-none
         dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-300"
     />
