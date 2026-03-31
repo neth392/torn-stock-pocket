@@ -18,13 +18,18 @@ const pkg = JSON.parse(fs.readFileSync(resolve(__dirname, 'package.json'), 'utf8
 const hasReact = pkg.devDependencies?.react || pkg.dependencies?.react
 const hasTailwind = pkg.devDependencies?.['@tailwindcss/vite'] || pkg.dependencies?.['@tailwindcss/vite']
 
+const isBeta = process.env.IS_BETA === 'true'
+
 // Replaced in the script's header to keep package.json as the source of truth.
 const metaTags = {
-  '<name>': pkg.name,
-  '<version>': pkg.version,
+  '<name>': isBeta ? `${pkg.name}-beta` : pkg.name,
+  '<version>': process.env.OVERRIDE_VERSION?.replace(/^v/, '') || pkg.version,
   '<description>': pkg.description,
   '<author>': pkg.author,
   '<homepage>': pkg.homepage,
+  '<downloadURL>': isBeta
+    ? `https://github.com/neth392/torn-stock-pocket/releases/download/beta/script.user.js`
+    : `https://github.com/neth392/torn-stock-pocket/releases/latest/download/script.user.js`,
 }
 
 let meta = fs.readFileSync(resolve(__dirname, 'userscript.txt'), 'utf8')

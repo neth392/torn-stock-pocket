@@ -52,6 +52,7 @@ jobs:
         run: npm run build
         env:
           OVERRIDE_VERSION: ${{ env.BUILD_VERSION }}
+          IS_BETA: ${{ env.IS_PRERELEASE }}
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
