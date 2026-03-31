@@ -29,7 +29,7 @@ function abbreviateMoney(amount: number): string {
   if (abs >= 1_000_000_000) return `$${sign}${+(abs / 1_000_000_000).toFixed(1)}b`
   if (abs >= 1_000_000) return `$${sign}${+(abs / 1_000_000).toFixed(1)}m`
   if (abs >= 1_000) return `$${sign}${+(abs / 1_000).toFixed(1)}k`
-  return `${sign}${abs}`
+  return `$${sign}${abs}`
 }
 
 export function generateAutoLabel(quickButton: AutoLabelQuickButton) {
