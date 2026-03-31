@@ -51,7 +51,7 @@ export default function QuickButtonButton({ stockId, quickButtonId }: Props) {
       enabled={typeof purchaseAmount !== 'number'}
     >
       <button
-        className={`flex w-fit items-center gap-2 rounded-md border px-3 py-1.5 text-sm font-medium transition-colors
+        className={`flex w-fit items-center gap-2 rounded-md border px-1 py-1.5 text-sm font-medium transition-colors
           select-none ${
             typeof purchaseAmount === 'number'
               ? `cursor-pointer ${styles.button}`
@@ -64,20 +64,21 @@ export default function QuickButtonButton({ stockId, quickButtonId }: Props) {
           setLoading(true)
           try {
             const response = await executeAction(action, stockId, purchaseAmount)
+            // TODO error handling w/ response
           } catch (error) {
-            console.error(`${action} failed:`, error) //TODO remove
+            console.error(`${action} failed:`, error) //TODO error handling
           } finally {
             setLoading(false)
           }
         }}
       >
-        {showIcon && <img src={getIconUrl(acronym)} alt={acronym} className="-my-2 -ml-2 h-8 w-8" />}
+        {showIcon && <img src={getIconUrl(acronym)} alt={acronym} className={'-my-2 -mr-2 -ml-1 h-8 w-8'} />}
         {showAcronym && (
           <span className={`rounded px-1.5 py-0.5 text-xs font-bold uppercase ${styles.badge}`}>{acronym}</span>
         )}
         <span>{displayLabel}</span>
         {showShares && typeof purchaseAmount === 'number' && (
-          <span className="text-xs opacity-70">×{purchaseAmount.toLocaleString()}</span>
+          <span className="text-xs opacity-70">x{purchaseAmount.toLocaleString()}</span>
         )}
       </button>
     </Tooltip>

@@ -243,6 +243,16 @@ function updateSettings(settings: Settings) {
     }
   }
 
+  // Ensure stocks are in stock settings order
+  // TODO investigate what caused this
+  for (const stockKeyString of Object.keys(settings.stockSettings)) {
+    const stockKey = Number(stockKeyString)
+    if (!settings.stockSettingsOrder.includes(stockKey)) {
+      updated = true
+      settings.stockSettingsOrder.push(stockKey)
+    }
+  }
+
   return updated
 }
 
