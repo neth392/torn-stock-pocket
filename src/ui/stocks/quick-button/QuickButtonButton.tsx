@@ -51,7 +51,7 @@ export default function QuickButtonButton({ stockId, quickButtonId }: Props) {
       enabled={typeof purchaseAmount !== 'number'}
     >
       <button
-        className={`flex w-fit items-center gap-2 rounded-md border px-3 py-1.5 text-sm font-medium transition-colors
+        className={`flex w-fit items-center gap-2 rounded-md border px-1 py-1.5 text-sm font-medium transition-colors
           select-none ${
             typeof purchaseAmount === 'number'
               ? `cursor-pointer ${styles.button}`
@@ -72,7 +72,7 @@ export default function QuickButtonButton({ stockId, quickButtonId }: Props) {
           }
         }}
       >
-        {showIcon && <img src={getIconUrl(acronym)} alt={acronym} className={'-my-2 -mr-2 -ml-3 h-8 w-8'} />}
+        {showIcon && <img src={getIconUrl(acronym)} alt={acronym} className={'-my-2 -mr-2 -ml-1 h-8 w-8'} />}
         {showAcronym && (
           <span className={`rounded px-1.5 py-0.5 text-xs font-bold uppercase ${styles.badge}`}>{acronym}</span>
         )}
