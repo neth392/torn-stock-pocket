@@ -1,0 +1,7 @@
+## CHANGELOG
+
+### v1.0.2
+- Make quick button label and value fields more distinct
+- Improve tooltips on mobile / touch devices
+- Adjust quick button spacing to be a bit more compact
+- (Bug) Add $ symbol to auto-label when amount is $999 or less
