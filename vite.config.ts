@@ -22,7 +22,7 @@ const isBeta = process.env.IS_BETA === 'true'
 
 // Replaced in the script's header to keep package.json as the source of truth.
 const metaTags = {
-  '<name>': pkg.name,
+  '<name>': isBeta ? `${pkg.name}-beta` : pkg.name,
   '<version>': process.env.OVERRIDE_VERSION?.replace(/^v/, '') || pkg.version,
   '<description>': pkg.description,
   '<author>': pkg.author,
