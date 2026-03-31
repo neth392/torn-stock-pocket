@@ -64,8 +64,9 @@ export default function QuickButtonButton({ stockId, quickButtonId }: Props) {
           setLoading(true)
           try {
             const response = await executeAction(action, stockId, purchaseAmount)
+            // TODO error handling
           } catch (error) {
-            console.error(`${action} failed:`, error) //TODO remove
+            console.error(`${action} failed:`, error) //TODO error handling
           } finally {
             setLoading(false)
           }
@@ -77,7 +78,7 @@ export default function QuickButtonButton({ stockId, quickButtonId }: Props) {
         )}
         <span>{displayLabel}</span>
         {showShares && typeof purchaseAmount === 'number' && (
-          <span className="text-xs opacity-70">×{purchaseAmount.toLocaleString()}</span>
+          <span className="text-xs opacity-70">x{purchaseAmount.toLocaleString()}</span>
         )}
       </button>
     </Tooltip>

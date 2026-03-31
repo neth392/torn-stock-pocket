@@ -6,43 +6,80 @@ type Props = {
   position?: 'top' | 'bottom'
   className?: string
   enabled?: boolean
+  longPressDelay?: number
 }
 
-export default function Tooltip({ text, children, position = 'top', className = '', enabled = true }: Props) {
+export default function Tooltip({
+  text,
+  children,
+  position = 'top',
+  className = '',
+  enabled = true,
+  longPressDelay = 500,
+}: Props) {
   const [visible, setVisible] = useState(false)
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const isTouchRef = useRef(false)
 
-  const show = () => {
-    if (!enabled) return
+  const clearTimer = useCallback(() => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current)
+      timeoutRef.current = null
+    }
+  }, [])
+
+  const hide = useCallback(() => {
+    clearTimer()
+    setVisible(false)
+  }, [clearTimer])
+
+  // --- Desktop: hover ---
+  const onMouseEnter = () => {
+    if (!enabled || isTouchRef.current) return
     timeoutRef.current = setTimeout(() => setVisible(true), 400)
   }
 
-  const hide = useCallback(() => {
-    if (timeoutRef.current) clearTimeout(timeoutRef.current)
-    setVisible(false)
-  }, [])
+  const onMouseLeave = () => {
+    if (isTouchRef.current) return
+    hide()
+  }
 
+  // --- Mobile: long-press to show, release/scroll to hide ---
+  const onTouchStart = () => {
+    isTouchRef.current = true
+    if (!enabled) return
+    timeoutRef.current = setTimeout(() => setVisible(true), longPressDelay)
+  }
+
+  const onTouchEnd = () => {
+    // If tooltip isn't visible yet, just cancel the timer — the tap
+    // proceeds normally and toggles the checkbox without interference.
+    if (!visible) {
+      clearTimer()
+    } else {
+      hide()
+    }
+  }
+
+  // Hide on scroll
   useEffect(() => {
     if (!visible) return
-    document.addEventListener('scroll', hide, true)
-    document.addEventListener('touchstart', hide)
-    return () => {
-      document.removeEventListener('scroll', hide, true)
-      document.removeEventListener('touchstart', hide)
-    }
+    const dismiss = () => hide()
+    document.addEventListener('scroll', dismiss, true)
+    return () => document.removeEventListener('scroll', dismiss, true)
   }, [visible, hide])
 
   useEffect(() => {
-    return () => {
-      if (timeoutRef.current) clearTimeout(timeoutRef.current)
-    }
-  }, [])
+    return clearTimer
+  }, [clearTimer])
 
   return (
     <div
       className={`${className} relative inline-flex`}
-      onMouseEnter={show}
-      onMouseLeave={hide}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+      onTouchStart={onTouchStart}
+      onTouchEnd={onTouchEnd}
       onContextMenu={(e) => {
         if (!enabled) return
         e.preventDefault()
