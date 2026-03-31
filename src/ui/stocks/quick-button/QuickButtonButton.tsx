@@ -64,7 +64,7 @@ export default function QuickButtonButton({ stockId, quickButtonId }: Props) {
           setLoading(true)
           try {
             const response = await executeAction(action, stockId, purchaseAmount)
-            // TODO error handling
+            // TODO error handling w/ response
           } catch (error) {
             console.error(`${action} failed:`, error) //TODO error handling
           } finally {
@@ -72,7 +72,7 @@ export default function QuickButtonButton({ stockId, quickButtonId }: Props) {
           }
         }}
       >
-        {showIcon && <img src={getIconUrl(acronym)} alt={acronym} className="-my-2 -ml-2 h-8 w-8" />}
+        {showIcon && <img src={getIconUrl(acronym)} alt={acronym} className={'-my-2 -mr-2 -ml-3 h-8 w-8'} />}
         {showAcronym && (
           <span className={`rounded px-1.5 py-0.5 text-xs font-bold uppercase ${styles.badge}`}>{acronym}</span>
         )}
