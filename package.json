@@ -1,7 +1,7 @@
 {
   "name": "torn-stock-pocket",
   "description": "A torn.com script to easily & quickly deposit/withdraw funds via the stock market",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "author": "neth [3564828]",
   "main": "dist/script.user.js",
   "homepage": "https://github.com/neth392/torn-stock-pocket",
