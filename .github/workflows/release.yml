@@ -35,7 +35,7 @@ jobs:
           NAME=$(node -p "require('./package.json').name")
           VERSION=$(node -p "require('./package.json').version")
           echo "PACKAGE_NAME=$NAME" >> $GITHUB_ENV
-          if [[ "${{ github.event.workflow_run.head_branch }}" == "beta" ]]; then
+          if [[ "${{ github.event.workflow_run.head_branch }}" == "dev" ]]; then
             echo "TAG_NAME=beta" >> $GITHUB_ENV
             echo "IS_PRERELEASE=true" >> $GITHUB_ENV
             TIMESTAMP=$(date +%Y%m%d%H%M%S)

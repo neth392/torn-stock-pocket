@@ -7,7 +7,7 @@ on:
   push:
     branches:
       - master
-      - beta
+      - dev
 
 jobs:
   tag:
@@ -30,11 +30,11 @@ jobs:
 
       - name: Determine tag
         run: |
-          if [[ "${{ github.ref_name }}" == "beta" ]]; then
+          if [[ "${{ github.ref_name }}" == "dev" ]]; then
             echo "TAG_NAME=beta" >> $GITHUB_ENV
             echo "IS_BETA=true" >> $GITHUB_ENV
           else
-            echo "TAG_NAME=v$PACKAGE_VERSION" >> $GITHUB_ENV
+            echo "TAG_NAME=v${{ env.PACKAGE_VERSION }}" >> $GITHUB_ENV
             echo "IS_BETA=false" >> $GITHUB_ENV
           fi
 
@@ -44,7 +44,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           if [[ "${{ env.IS_BETA }}" == "true" ]]; then
             git tag -f beta
-            git push origin refs/tags/beta --force
+            git push origin beta --force
           else
             if git rev-parse "${{ env.TAG_NAME }}" >/dev/null 2>&1; then
               echo "Tag ${{ env.TAG_NAME }} already exists. Skipping."
