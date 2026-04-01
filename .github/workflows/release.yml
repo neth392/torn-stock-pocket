@@ -31,17 +31,20 @@ jobs:
         run: npm ci
 
       - name: Determine tag and release type
-        id: release_info
         run: |
-          # ... your existing logic ...
+          NAME=$(node -p "require('./package.json').name")
+          VERSION=$(node -p "require('./package.json').version")
+          echo "PACKAGE_NAME=$NAME" >> $GITHUB_ENV
           if [[ "${{ github.event.workflow_run.head_branch }}" == "dev" ]]; then
-            echo "is_prerelease=true" >> $GITHUB_OUTPUT
-            echo "make_latest=false" >> $GITHUB_OUTPUT
+            echo "TAG_NAME=beta" >> $GITHUB_ENV
+            echo "IS_PRERELEASE=true" >> $GITHUB_ENV
+            TIMESTAMP=$(date +%Y%m%d%H%M%S)
+            echo "BUILD_VERSION=${VERSION}-beta.${TIMESTAMP}" >> $GITHUB_ENV
           else
-            echo "is_prerelease=false" >> $GITHUB_OUTPUT
-            echo "make_latest=true" >> $GITHUB_OUTPUT
+            echo "TAG_NAME=v${VERSION}" >> $GITHUB_ENV
+            echo "IS_PRERELEASE=false" >> $GITHUB_ENV
+            echo "BUILD_VERSION=v${VERSION}" >> $GITHUB_ENV
           fi
-
 
       - name: Build script
         run: npm run build
@@ -54,6 +57,8 @@ jobs:
         with:
           name: ${{ env.PACKAGE_NAME }} ${{ env.TAG_NAME }}
           tag_name: ${{ env.TAG_NAME }}
-          prerelease: ${{ steps.release_info.outputs.is_prerelease == 'true' }}
-          make_latest: ${{ steps.release_info.outputs.make_latest }}
+          prerelease: ${{ env.IS_PRERELEASE == 'true' }}
+          make_latest: ${{ env.IS_PRERELEASE == 'true' && 'false' || 'true' }}
           files: dist/script.user.js
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
