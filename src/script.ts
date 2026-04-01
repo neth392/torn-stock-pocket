@@ -42,7 +42,6 @@ async function main() {
   tradeButtonHandler.start(stockMarketElement)
 
   setupUI(stockMarketElement)
-  console.log('test')
 }
 
 async function getStockMarketElement() {
