@@ -60,7 +60,7 @@ jobs:
           name: ${{ env.PACKAGE_NAME }} ${{ env.TAG_NAME }}
           tag_name: ${{ env.TAG_NAME }}
           prerelease: ${{ env.IS_PRERELEASE == 'true' }}
-          make_latest: ${{ env.IS_PRERELEASE != 'true' }}
+          make_latest: ${{ env.IS_PRERELEASE == 'true' && 'false' || 'true' }}
           files: dist/script.user.js
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
