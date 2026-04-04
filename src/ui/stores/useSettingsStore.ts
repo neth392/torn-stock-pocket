@@ -25,7 +25,7 @@ export type SettingsStore = Settings & {
   setUiExpanded: (expanded: boolean) => void
   setBlockBuy: (blocked: boolean) => void
   setBlockSell: (blocked: boolean) => void
-  setAllowStockTrade(stock: number, key: keyof StockSetting['allowTrade'], allow: boolean): void
+  setStockToggle(stock: number, rootKey: 'allowTrade' | 'dollarTrade', key: 'buy' | 'sell', value: boolean): void
   removeStockSetting(stockId: number): void
   setSelectedStockId: (stockId: number | null) => void
   setEditedQuickButton: (quickButton: EditedQuickButton | null) => void
@@ -70,9 +70,9 @@ export const useSettingsStore = create<SettingsStore>()(
         set((state) => {
           state.blockTrade.sell = blocked
         }),
-      setAllowStockTrade: (stock, key, allow) =>
+      setStockToggle: (stock, rootKey, key, value) =>
         set((state) => {
-          getOrCreateStockSetting(state, stock).allowTrade[key] = allow
+          getOrCreateStockSetting(state, stock)[rootKey][key] = value
           cleanupStockSetting(state, stock)
         }),
       removeStockSetting: (stockId) => {
@@ -218,7 +218,13 @@ function getOrCreateStockSetting(state: Settings, stockId: number): StockSetting
 function cleanupStockSetting(state: Settings, stockId: number) {
   const setting = state.stockSettings[stockId]
   if (!setting) return false
-  if (!setting.allowTrade.buy && !setting.allowTrade.sell && Object.keys(setting.quickButtons).length === 0) {
+  if (
+    !setting.allowTrade.buy &&
+    !setting.allowTrade.sell &&
+    !setting.dollarTrade.buy &&
+    !setting.dollarTrade.sell &&
+    Object.keys(setting.quickButtons).length === 0
+  ) {
     delete state.stockSettings[stockId]
     state.stockSettingsOrder = state.stockSettingsOrder.filter((id) => id !== stockId)
     return true

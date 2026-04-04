@@ -98,12 +98,20 @@ export type StockSetting = {
     buy: boolean
     sell: boolean
   }
+  dollarTrade: {
+    buy: boolean
+    sell: boolean
+  }
 }
 
 export const DefaultStockSetting = {
   quickButtons: {},
   quickButtonOrder: [],
   allowTrade: {
+    buy: false,
+    sell: false,
+  },
+  dollarTrade: {
     buy: false,
     sell: false,
   },

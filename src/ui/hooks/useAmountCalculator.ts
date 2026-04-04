@@ -3,8 +3,8 @@ import { getAmountCalculator } from '@/amount-calculator'
 import { useUserMoneyStore } from '@/ui/stores/useUserMoneyStore'
 import { useStockAmountOwnedStore } from '@/ui/stores/useStockAmountOwnedStore'
 import { useMemo } from 'react'
-import { useStockPriceStore } from '@/ui/stores/useStockPriceStore'
 import { useShallow } from 'zustand/react/shallow'
+import { useStockPrice } from '@/ui/hooks/useStockPrice'
 
 export function useAmountCalculator(stockId: number, quickButtonId: string) {
   const { action, mode, valueType, value } = useSettingsStore(
@@ -20,7 +20,7 @@ export function useAmountCalculator(stockId: number, quickButtonId: string) {
   )
   const userMoney = useUserMoneyStore((state) => state.userMoney)
   const amountOwned = useStockAmountOwnedStore((state) => state.amountOwned[stockId] ?? 0)
-  const stockPrice = useStockPriceStore((state) => state.stockPrices[stockId])
+  const stockPrice = useStockPrice(stockId, action)
 
   const amountCalculator = useMemo(() => getAmountCalculator(action, mode, valueType), [action, mode, valueType])
 

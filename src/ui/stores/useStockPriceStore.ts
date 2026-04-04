@@ -1,17 +1,21 @@
 import { create } from 'zustand'
 import { immer } from 'zustand/middleware/immer'
+import { QuickButtonAction } from '@/types/Settings'
 
 type StockPriceState = {
-  stockPrices: Record<number, number>
+  buyPrices: Record<number, number>
+  sellPrices: Record<number, number>
   setPrice: (stockId: number, price: number) => void
 }
 
 export const useStockPriceStore = create<StockPriceState>()(
-  immer((set) => ({
-    stockPrices: {},
+  immer((set, get) => ({
+    buyPrices: {},
+    sellPrices: {},
     setPrice: (stockId, price) =>
       set((state) => {
-        state.stockPrices[stockId] = price
+        state.buyPrices[stockId] = Math.ceil(price)
+        state.sellPrices[stockId] = Math.floor(price)
       }),
   }))
 )

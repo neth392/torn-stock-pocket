@@ -8,3 +8,10 @@ v1.0.3
 - Improve tooltips on mobile / touch devices
 - Adjust quick button spacing to be a bit more compact
 - (Bug) Add $ symbol to auto-label when amount is $999 or less
+
+v1.0.4
+- Add tooltips to allow buy / allow sell toggles
+- Add tooltip to create new quick button
+- Add tooltips to block all buy / block all sell
+- Improve tooltip so it doesn't overflow edges of screen on smaller viewports
+- Add toggleable fields to buy/sell a stock by dollar amount

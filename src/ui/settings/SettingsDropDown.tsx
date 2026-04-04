@@ -29,12 +29,14 @@ export default function SettingsDropDown() {
             setEnabledSelector={(state) => state.setBlockBuy}
             label={'Block all buy'}
             colors={BLOCK_BUY_COLORS}
+            tooltip={'Blocks buying for all stocks. Enable "Allow buy" on a stock to override.'}
           />
           <BlockTradeButton
             enabledSelector={(state) => state.blockTrade.sell}
             setEnabledSelector={(state) => state.setBlockSell}
             label={'Block all sell'}
             colors={BLOCK_SELL_COLORS}
+            tooltip={'Blocks selling for all stocks. Enable "Allow sell" on a stock to override.'}
           />
         </div>
         <div className={'flex items-center gap-x-2'}>

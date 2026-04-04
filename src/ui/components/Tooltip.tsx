@@ -6,13 +6,22 @@ type Props = {
   position?: 'top' | 'bottom'
   className?: string
   enabled?: boolean
+  showDelay?: number
 }
 
-export default function Tooltip({ text, children, position = 'top', className = '', enabled = true }: Props) {
+export default function Tooltip({
+  text,
+  children,
+  position = 'top',
+  className = '',
+  enabled = true,
+  showDelay = 400,
+}: Props) {
   const [visible, setVisible] = useState(false)
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const hideTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const isTouchRef = useRef(false)
+  const wrapperRef = useRef<HTMLDivElement>(null)
 
   const clearTimers = useCallback(() => {
     if (timeoutRef.current) {
@@ -30,11 +39,36 @@ export default function Tooltip({ text, children, position = 'top', className = 
     setVisible(false)
   }, [clearTimers])
 
+  // Ref callback: positions the tooltip the instant it mounts
+  const tooltipRefCallback = useCallback(
+    (el: HTMLDivElement | null) => {
+      if (!el || !wrapperRef.current) return
+      const wrapper = wrapperRef.current.getBoundingClientRect()
+      const rect = el.getBoundingClientRect()
+      const padding = 4
+
+      // Vertical
+      el.style.top = position === 'top' ? `${wrapper.top - rect.height - 4}px` : `${wrapper.bottom + 4}px`
+
+      // Horizontal: center, then clamp
+      const maxWidth = window.innerWidth - padding * 2
+      if (rect.width > maxWidth) el.style.maxWidth = `${maxWidth}px`
+
+      const width = Math.min(rect.width, maxWidth)
+      let left = wrapper.left + wrapper.width / 2 - width / 2
+      left = Math.max(padding, Math.min(left, window.innerWidth - width - padding))
+      el.style.left = `${left}px`
+
+      el.style.visibility = 'visible'
+    },
+    [position]
+  )
+
   // --- Desktop: hover ---
   const onMouseEnter = () => {
     if (!enabled || isTouchRef.current) return
     clearTimers()
-    timeoutRef.current = setTimeout(() => setVisible(true), 400)
+    timeoutRef.current = setTimeout(() => setVisible(true), showDelay)
   }
 
   const onMouseLeave = () => {
@@ -43,21 +77,15 @@ export default function Tooltip({ text, children, position = 'top', className = 
   }
 
   // --- Mobile: show on tap, auto-hide after a moment ---
-  // We don't block or delay anything — just flash the tooltip.
   const onTouchStart = () => {
     isTouchRef.current = true
     if (!enabled) return
 
-    // Show immediately, no delay — the tap still propagates
-    // to children (checkbox, button, etc.) naturally.
     clearTimers()
     setVisible(true)
 
-    // Auto-hide after 1.5s so the user sees it briefly
     hideTimeoutRef.current = setTimeout(() => setVisible(false), 1500)
   }
-
-  // No onTouchEnd needed — we're not blocking anything
 
   // Hide on scroll
   useEffect(() => {
@@ -70,11 +98,9 @@ export default function Tooltip({ text, children, position = 'top', className = 
   // Dismiss on tap outside
   useEffect(() => {
     if (!visible || !isTouchRef.current) return
-    const dismiss = (e: TouchEvent) => {
-      // If the tap is outside this tooltip wrapper, hide
+    const dismiss = () => {
       hide()
     }
-    // Use a slight delay so the current tap doesn't immediately dismiss
     const id = setTimeout(() => {
       document.addEventListener('touchstart', dismiss, { once: true })
     }, 50)
@@ -90,6 +116,7 @@ export default function Tooltip({ text, children, position = 'top', className = 
 
   return (
     <div
+      ref={wrapperRef}
       className={`${className} relative inline-flex`}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
@@ -103,9 +130,10 @@ export default function Tooltip({ text, children, position = 'top', className = 
       {children}
       {visible && enabled && (
         <div
-          className={`pointer-events-none absolute left-1/2 z-50 -translate-x-1/2 rounded bg-neutral-800 px-2 py-1
-          text-xs font-bold whitespace-nowrap text-white normal-case shadow-lg dark:bg-neutral-200 dark:text-neutral-800
-          ${position === 'top' ? 'bottom-full mb-1' : 'top-full mt-1'}`}
+          ref={tooltipRefCallback}
+          className={`pointer-events-none fixed z-50 rounded bg-neutral-800 px-2 py-1 text-xs font-bold text-white
+          normal-case shadow-lg dark:bg-neutral-200 dark:text-neutral-800`}
+          style={{ width: 'max-content', visibility: 'hidden' }}
         >
           {text}
         </div>
