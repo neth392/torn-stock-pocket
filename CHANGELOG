@@ -15,4 +15,4 @@ v1.0.4
 - Add tooltips to block all buy / block all sell
 - Improve tooltip so it doesn't overflow edges of screen on smaller viewports
 - Add toggleable fields to buy/sell a stock by dollar amount
-- (TODO) Adjust purchase calculations to round stock prices to how torn does it.
+- (TODO) Adjust transaction calculation logic (amount * price.decimal then rounded down for sell and up for buy)
