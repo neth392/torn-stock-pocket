@@ -3,6 +3,7 @@ import { useSettingsStore } from '@/ui/stores/useSettingsStore'
 import { useShallow } from 'zustand/react/shallow'
 import StockCardQuickButtonTag from '@/ui/stocks/card/tag/StockCardQuickButtonTag'
 import StockCardAllowTag from '@/ui/stocks/card/tag/StockCardAllowTag'
+import StockCardDollarTradeTag from '@/ui/stocks/card/tag/StockCardDollarTradeTag'
 
 type Props = {
   stockId: number
@@ -15,6 +16,8 @@ export default function StockCardTagList({ stockId }: Props) {
     <div className={'flex flex-wrap items-center justify-start gap-2 p-1 pb-0 pl-0'}>
       <StockCardAllowTag stockId={stockId} property={'buy'} />
       <StockCardAllowTag stockId={stockId} property={'sell'} />
+      <StockCardDollarTradeTag stockId={stockId} property={'buy'} />
+      <StockCardDollarTradeTag stockId={stockId} property={'sell'} />
       {quickButtonIds.map((quickButtonId) => (
         <StockCardQuickButtonTag key={stockId} stockId={stockId} quickButtonId={quickButtonId} />
       ))}

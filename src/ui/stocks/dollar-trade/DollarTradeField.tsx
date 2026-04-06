@@ -1,14 +1,12 @@
-import React, { act, useState } from 'react'
-import { useSettingsStore } from '@/ui/stores/useSettingsStore'
+import React, { useMemo, useState } from 'react'
 import { useStockDataStore } from '@/ui/stores/useStockDataStore'
 import { useUserMoneyStore } from '@/ui/stores/useUserMoneyStore'
 import { useStockPriceStore } from '@/ui/stores/useStockPriceStore'
 import { useStockAmountOwnedStore } from '@/ui/stores/useStockAmountOwnedStore'
 import { executeAction } from '@/stock-trader'
-import { STOCK_ICON_SVG_URL } from '@/constants'
 import type { QuickButtonAction } from '@/types/Settings'
 import Tooltip from '@/ui/components/Tooltip'
-import { useStockPrice } from '@/ui/hooks/useStockPrice'
+import { getAmountCalculator } from '@/amount-calculator'
 
 type Props = {
   stockId: number
@@ -18,8 +16,10 @@ type Props = {
 export default function DollarTradeField({ stockId, action }: Props) {
   const acronym = useStockDataStore((state) => state.stockRecord[stockId]?.acronym)
   const userMoney = useUserMoneyStore((state) => state.userMoney)
-  const stockPrice = useStockPrice(stockId, action)
+  const rawStockPrice = useStockPriceStore((state) => state.rawStockPrices[stockId])
   const amountOwned = useStockAmountOwnedStore((state) => state.amountOwned[stockId] ?? 0)
+
+  const amountCalculator = useMemo(() => getAmountCalculator(action, 'amount', 'number'), [action])
 
   const [inputValue, setInputValue] = useState('')
   const [loading, setLoading] = useState(false)
@@ -27,23 +27,22 @@ export default function DollarTradeField({ stockId, action }: Props) {
   const dollarAmount = Number(inputValue)
   const isBuy = action === 'buy'
 
-  const shares = Math.floor(dollarAmount / stockPrice)
+  const sharesOrError = useMemo(
+    () =>
+      amountCalculator({
+        amountOwned,
+        stockPrice: rawStockPrice,
+        userMoney,
+        value: dollarAmount,
+      }),
+    [amountCalculator, amountOwned, rawStockPrice, userMoney, dollarAmount]
+  )
 
-  const getError = (): string | null => {
-    if (!inputValue || dollarAmount <= 0) return null
-    if (isNaN(dollarAmount)) return 'Invalid amount'
-    if (!stockPrice) return 'No price data'
-    if (shares <= 0) return 'Less than one share'
-    if (isBuy && dollarAmount > userMoney) return 'Not enough cash'
-    if (!isBuy && shares > amountOwned) return 'Not enough shares'
-    return null
-  }
-
-  const error = getError()
+  const error = inputValue !== '' && typeof sharesOrError === 'string' ? sharesOrError : null
+  const shares = typeof sharesOrError === 'number' ? sharesOrError : 0
   const toolTipError = error ?? (dollarAmount === 0 ? 'Enter a valid amount' : null)
 
-  const canTrade = inputValue !== '' && dollarAmount > 0 && shares > 0 && !error && !loading
-
+  const canTrade = shares > 0 && !loading
   const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const cleaned = e.target.value.replace(/[^0-9.]/g, '')
     setInputValue(cleaned)

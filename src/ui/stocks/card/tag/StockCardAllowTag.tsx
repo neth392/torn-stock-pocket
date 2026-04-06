@@ -11,5 +11,5 @@ type Props = {
 export default function StockCardAllowTag({ stockId, property }: Props) {
   const allow = useSettingsStore((state) => state.stockSettings[stockId]?.allowTrade[property] ?? false)
 
-  return allow ? <StockCardTag text={`Allow ${property}`} tagTheme={'gray'} /> : <></>
+  return allow ? <StockCardTag text={`Allow ${property}`} tagTheme={'gray'} /> : null
 }

@@ -30,7 +30,7 @@ async function main() {
 
   const stockListObserver = new StockListObserver(
     (stockId, price) => {
-      useStockPriceStore.getState().setPrice(stockId, price)
+      useStockPriceStore.getState().setRawPrice(stockId, price)
     },
     (stockId, amount) => {
       useStockAmountOwnedStore.getState().setAmountOwned(stockId, amount)

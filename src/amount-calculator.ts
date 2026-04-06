@@ -15,75 +15,91 @@ type ValueToAmount = {
 const calculators: QuickButtonModeRecord<ValueToAmount> = {
   buy: {
     amount: {
-      // Buy exactly $value worth — need enough cash
       number: ({ userMoney, stockPrice, value }) => {
-        if (value > userMoney) return 'Not enough cash'
-        const shares = Math.floor(value / stockPrice)
-        if (shares === 0) return 'Amount is less than one share'
+        const shares = maxBuyShares(value, stockPrice)
+        if (shares <= 0) return 'Amount is less than one share'
+        if (tornBuyCost(shares, stockPrice) > userMoney) return 'Not enough cash'
         return shares
       },
-      // Buy with all cash
       all: ({ userMoney, stockPrice }) => {
-        if (userMoney < stockPrice) return 'Not enough cash for even one share'
-        return Math.floor(userMoney / stockPrice)
+        const shares = maxBuyShares(userMoney, stockPrice)
+        if (shares <= 0) return 'Not enough cash for even one share'
+        return shares
       },
     },
     keepCash: {
-      // Buy shares while keeping $value in reserve
       number: ({ userMoney, stockPrice, value }) => {
         if (userMoney <= value) return 'Cash is already at or below reserve amount'
-        const shares = Math.floor((userMoney - value) / stockPrice)
-        if (shares === 0) return 'Not enough spare cash for even one share'
+        const shares = maxBuyShares(userMoney - value, stockPrice)
+        if (shares <= 0) return 'Not enough spare cash for even one share'
         return shares
       },
-      // Keep all cash — nothing to do
       all: () => 'Nothing to buy when keeping all cash',
     },
     percentage: {
-      // Spend value% of cash
       number: ({ userMoney, stockPrice, value }) => {
         const cashToSpend = (userMoney * value) / 100
-        const shares = Math.floor(cashToSpend / stockPrice)
-        if (shares === 0) return 'Not enough cash for even one share at this percentage'
+        const shares = maxBuyShares(cashToSpend, stockPrice)
+        if (shares <= 0) return 'Not enough cash for even one share at this percentage'
+        if (tornBuyCost(shares, stockPrice) > userMoney) return 'Not enough cash'
         return shares
       },
-      // Spend 100% of cash
       all: ({ userMoney, stockPrice }) => {
-        if (userMoney < stockPrice) return 'Not enough cash for even one share'
-        return Math.floor(userMoney / stockPrice)
+        const shares = maxBuyShares(userMoney, stockPrice)
+        if (shares <= 0) return 'Not enough cash for even one share'
+        return shares
       },
     },
   },
   sell: {
     amount: {
-      // Sell $value worth of shares
       number: ({ stockPrice, amountOwned, value }) => {
-        const shares = Math.ceil(value / stockPrice)
-        if (shares > amountOwned) return 'Not enough shares owned'
         if (amountOwned === 0) return 'No shares to sell'
+        const shares = minSellShares(value, stockPrice)
+        if (shares <= 0) return 'Amount is less than one share'
+        if (shares > amountOwned) return 'Not enough shares owned'
         return shares
       },
-      // Sell all shares
       all: ({ amountOwned }) => {
         if (amountOwned === 0) return 'No shares to sell'
         return amountOwned
       },
     },
     toCash: {
-      // Sell enough shares to reach $value cash
       number: ({ userMoney, stockPrice, amountOwned, value }) => {
         if (userMoney >= value) return 'Cash is already at or above target'
-        const shares = Math.ceil((value - userMoney) / stockPrice)
+        if (amountOwned === 0) return 'No shares to sell'
+        const needed = value - userMoney
+        const shares = minSellShares(needed, stockPrice)
+        if (shares <= 0) return 'Amount is less than one share'
         if (shares > amountOwned) return 'Not enough shares to reach target'
         return shares
       },
-      // Not possible
-      all: () => {
-        return 'Nothing to sell when target is all cash on hand'
-      },
+      all: () => 'Nothing to sell when target is all cash on hand',
     },
   },
 } as const
+
+function maxBuyShares(budget: number, rawPrice: number): number {
+  const shares = Math.floor(budget / rawPrice)
+  return tornBuyCost(shares, rawPrice) > budget ? shares - 1 : shares
+}
+
+function minSellShares(target: number, rawPrice: number): number {
+  const grossNeeded = Math.ceil(target / 0.999)
+  const shares = Math.ceil(grossNeeded / rawPrice)
+  return tornSellRevenue(shares, rawPrice) < target ? shares + 1 : shares
+}
+
+function tornBuyCost(shares: number, rawPrice: number): number {
+  return Math.ceil(shares * rawPrice)
+}
+
+function tornSellRevenue(shares: number, rawPrice: number): number {
+  const gross = Math.floor(shares * rawPrice)
+  const fee = Math.ceil(gross * 0.001)
+  return gross - fee
+}
 
 export function getAmountCalculator(action: QuickButtonAction, mode: QuickButtonMode, valueType: QuickButtonValueType) {
   return (calculators[action] as Record<string, ValueToAmount>)[mode][valueType]

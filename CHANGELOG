@@ -10,9 +10,9 @@ v1.0.3
 - (Bug) Add $ symbol to auto-label when amount is $999 or less
 
 v1.0.4
-- Add tooltips to allow buy / allow sell toggles
-- Add tooltip to create new quick button
-- Add tooltips to block all buy / block all sell
-- Improve tooltip so it doesn't overflow edges of screen on smaller viewports
-- Add toggleable fields to buy/sell a stock by dollar amount
-- (TODO) Adjust transaction calculation logic (amount * price.decimal then rounded down for sell and up for buy)
+- (Feature) Add toggleable fields to buy/sell a stock by dollar amount
+- (QOL) Add tooltips to allow buy / allow sell toggles
+- (QOL) Add tooltip to create new quick button
+- (QOL) Add tooltips to block all buy / block all sell
+- (QOL) Improve tooltip so it doesn't overflow edges of screen on smaller viewports
+- (Bug) Adjust purchase amount calculation logic, account for 0.1% selling fee.
